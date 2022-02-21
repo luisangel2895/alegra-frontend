@@ -1,30 +1,30 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+  <header-component></header-component>
+  <main @scroll="downNav">
+    <router-view />
+  </main>
+  <footer-component></footer-component>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import { mapActions } from "vuex";
 
-#nav {
-  padding: 30px;
-}
+import HeaderComponent from "@/components/shared/HeaderComponent.vue";
+import FooterComponent from "@/components/shared/FooterComponent.vue";
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+@Options({
+  components: {
+    HeaderComponent,
+    FooterComponent,
+  },
+  methods: mapActions(["getapi"]),
+})
+export default class App extends Vue {
+  getapi!: any;
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  mounted(): void {
+    this.getapi();
+  }
 }
-</style>
+</script>
