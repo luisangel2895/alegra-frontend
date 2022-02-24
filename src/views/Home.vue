@@ -4,8 +4,9 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Options, Vue } from "vue-class-component";
-
+// Components
 import SearchSection from "@/components/home/SearchSection.vue";
 import ImagesSection from "@/components/home/ImagesSection.vue";
 

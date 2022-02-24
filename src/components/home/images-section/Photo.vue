@@ -1,22 +1,26 @@
 <template>
   <div class="container-image">
-    <img v-if="!imageLoaded" src="@/assets/default/default.jpg" alt="" />
     <img
-      src="https://picsum.photos/300/300"
-      alt=""
-      class="image-search"
-      :class="{ loadingImage: imageLoaded }"
-      @load="loadImage"
+      src="@/assets/default/default.jpg"
+      alt="image-default"
+      v-if="getLoading"
+    />
+    <img
+      v-else
+      :src="this.image.thumbnail"
+      alt="image-search"
+      :class="{ loadingImage: image }"
       @click="selectImage"
     />
+
     <div
       class="container-author"
-      :class="{ loadingAuthor: authorLoaded }"
-      v-if="authorLoaded"
+      :class="{ loadingAuthor: image }"
+      v-if="image && !getLoading"
     >
-      <span class="author-name">Angel Orellana</span>
+      <span class="author-name">{{ seller.name }}</span>
     </div>
-    <div class="container-buy" v-if="imageLoaded">
+    <div class="container-buy" v-if="image && !getLoading">
       <img
         v-if="!imageSelected"
         src="@/assets/icons/heart-void.svg"
@@ -36,23 +40,59 @@
 </template>
 
 <script lang="ts">
+// Libraries
 import { Options, Vue } from "vue-class-component";
+import { mapGetters } from "vuex";
+import { mapMutations } from "vuex";
+
+// Types
+import { GoogleImage } from "@/types/google-images";
+import { AlegraSeller } from "@/types/alegra-seller";
+import { ImageSelled } from "@/types/sell-register";
 
 @Options({
-  components: {},
+  props: {
+    image: {} as GoogleImage,
+    seller: {} as AlegraSeller,
+  },
+  watch: {
+    getLoading(loading) {
+      if (!loading) {
+        // reset the heart
+        this.imageSelected = false;
+      }
+    },
+  },
+  computed: mapGetters(["getLoading"]),
+  methods: mapMutations(["UPDATE_LIST_SELL_REGISTER"]),
 })
 export default class Photo extends Vue {
-  imageLoaded = false;
-  authorLoaded = false;
+  image!: GoogleImage;
+  seller!: AlegraSeller;
 
+  imageLoaded = false;
   imageSelected = false;
 
-  loadImage(): void {
-    this.imageLoaded = true;
-    this.authorLoaded = true;
-  }
+  UPDATE_LIST_SELL_REGISTER!: (payload: ImageSelled) => void;
+
   selectImage(): void {
     this.imageSelected = !this.imageSelected;
+
+    const imageSelled: ImageSelled = {
+      id: 0,
+      name: "",
+      key: "",
+      url: "",
+      title: "",
+    };
+
+    imageSelled.id = this.seller.id;
+    imageSelled.name = this.seller.name;
+    imageSelled.key = this.image.original;
+    imageSelled.url = this.image.original;
+    imageSelled.title = this.image.title;
+
+    this.UPDATE_LIST_SELL_REGISTER(imageSelled);
   }
 }
 </script>
@@ -61,11 +101,12 @@ export default class Photo extends Vue {
 .container-image {
   display: block;
   padding: 0px;
-  height: 320px;
+  height: 140px;
 }
 .container-image > img {
   border: 1px solid rgba(100, 100, 100, 0.3);
   border-radius: 5px;
+  height: 120px;
 }
 .loadingImage {
   animation: fadein 2s;
@@ -108,7 +149,7 @@ export default class Photo extends Vue {
 }
 .container-buy {
   position: relative;
-  top: -300px;
+  top: -150px;
   padding-right: 20px;
 
   text-align: end;
@@ -135,6 +176,30 @@ export default class Photo extends Vue {
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-image {
+    height: 270px;
+  }
+  .container-image > img {
+    height: 250px;
+  }
+  .container-buy {
+    top: -250px;
+  }
+}
+
+@media (min-width: 1300px) {
+  .container-image {
+    height: 320px;
+  }
+  .container-image > img {
+    height: 300px;
+  }
+  .container-buy {
+    top: -300px;
   }
 }
 </style>

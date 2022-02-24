@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchSection.vue Match with snapshot 1`] = `
+<section class="search">
+  <div class="search-layer-z1">
+    <image-search-stub></image-search-stub>
+  </div>
+  <div class="search-layer-z2">
+    <div class="search-layer-z2-container">
+      <title-search-stub></title-search-stub>
+      <box-search-stub></box-search-stub>
+    </div>
+  </div>
+</section>
+`;

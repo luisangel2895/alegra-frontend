@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImagesSection.vue Match with snapshot 1`] = `
+<section class="images">
+  <loader-line-stub></loader-line-stub>
+  <div class="images-container">
+    <photo-stub seller="[object Object]" image="[object Object]"></photo-stub>
+    <photo-stub seller="[object Object]" image="[object Object]"></photo-stub>
+  </div>
+</section>
+`;

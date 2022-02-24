@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BoxSearch.vue Match with snapshot 1`] = `
+<div class="search--box">
+  <div class="search--box__icon-all">All</div><input type="text" placeholder="Search Photo ...">
+  <div class="search--box__icon"><img alt=""></div>
+</div>
+`;

@@ -1,15 +1,41 @@
 <template>
   <div class="search--box">
     <div class="search--box__icon-all">All</div>
-    <input type="text" placeholder="Search Photo ..." />
-    <div class="search--box__icon">
+    <input
+      type="text"
+      placeholder="Search Photo ..."
+      v-model="word"
+      @keypress="enterSearch"
+    />
+    <div class="search--box__icon" @click="searchWord">
       <img src="@/assets/icons/search.svg" alt="" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Vue } from "vue-class-component";
-export default class BoxSearch extends Vue {}
+import { Options, Vue } from "vue-class-component";
+import { mapActions } from "vuex";
+
+import { GoogleImage } from "@/types/google-images";
+import { EventKeyPress } from "@/types/event-keypress";
+
+@Options({
+  methods: mapActions(["getImagesGoogle"]),
+})
+export default class BoxSearch extends Vue {
+  word = "";
+  getImagesGoogle!: (word: string) => Promise<GoogleImage[]>;
+
+  searchWord(): void {
+    this.getImagesGoogle(this.word);
+  }
+
+  enterSearch(event: EventKeyPress): void {
+    if (event.code === "Enter") {
+      this.getImagesGoogle(this.word);
+    }
+  }
+}
 </script>
 
 <style scoped>

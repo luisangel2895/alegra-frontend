@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home.vue Match with snapshot 1`] = `
+<search-section-stub></search-section-stub>
+<images-section-stub></images-section-stub>
+`;
