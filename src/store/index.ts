@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { getGoogleImages } from "@/services/google-service";
 import { getSellersAlegra } from "@/services/alegra-service";
+import VuexPersistence from "vuex-persist";
 
 // Types
 import { GoogleImage } from "@/types/google-images";
@@ -9,6 +10,10 @@ import { SellRegister } from "@/types/sell-register";
 import { ImageSelled } from "@/types/sell-register";
 import { Image } from "@/types/sell-register";
 import { SellRegisterShort } from "@/types/sell-register";
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage,
+});
 
 export default createStore({
   state: {
@@ -131,4 +136,5 @@ export default createStore({
     },
   },
   modules: {},
+  plugins: [vuexLocal.plugin],
 });

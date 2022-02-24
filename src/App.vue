@@ -51,6 +51,7 @@ export default class App extends Vue {
   mounted(): void {
     this.getImagesGoogle();
     this.getAlegraSellers();
+    window.localStorage.clear();
   }
 }
 </script>
