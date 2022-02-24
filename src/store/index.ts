@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import { getGoogleImages } from "@/services/google-service";
-import { getSellersAlegra } from "@/services/alegra-service";
+import { getSellersAlegra, createProduct } from "@/services/alegra-service";
 import VuexPersistence from "vuex-persist";
 
 // Types
@@ -15,17 +15,18 @@ const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
 });
 
+// GLobal Const
+const points_per_sell = 7;
+const points_objective = 20;
+
 export default createStore({
   state: {
-    // Global variables
-    points_per_sell: 7 as number,
-    points_objective: 20 as number,
-    // Vuex variables
     images: [] as GoogleImage[],
     isLoading: true,
     sellers: [] as AlegraSeller[],
     sellRegisters: [] as SellRegister[],
     winnerSeller: {} as SellRegister,
+    showModal: false as boolean,
   },
   getters: {
     getImages: (state) => state.images,
@@ -44,7 +45,7 @@ export default createStore({
         return tuple;
       });
     },
-    getObjetivePoints: (state) => state.points_objective,
+    getObjetivePoints: () => points_objective,
   },
   mutations: {
     UPDATE_GOOGLE_IMAGES(state, payload: GoogleImage[]) {
@@ -60,65 +61,52 @@ export default createStore({
     },
 
     UPDATE_LIST_SELL_REGISTER(state, payload: ImageSelled) {
-      const existSeller: boolean = state.sellRegisters.some(
+      if (!state.sellRegisters.length) {
+        // inicializate sellRegisters
+        state.sellRegisters = state.sellers.map((seller: AlegraSeller) => {
+          const sellRegister: SellRegister = {
+            id: seller.id,
+            name: seller.name,
+            points: 0,
+            products: [],
+          };
+          return sellRegister;
+        });
+      }
+
+      const register: SellRegister | undefined = state.sellRegisters.find(
         (register: SellRegister) => {
           return register.id === payload.id;
         }
       );
 
-      if (existSeller) {
-        const register: SellRegister | undefined = state.sellRegisters.find(
-          (register: SellRegister) => {
-            return register.id === payload.id;
-          }
-        );
+      const products: Image[] | undefined = register?.products;
 
-        const products: Image[] | undefined = register?.products;
-
-        const existImage: boolean | undefined = register?.products.some(
-          (image: Image) => {
-            return image.key === payload.key;
-          }
-        );
-
-        if (existImage) {
-          // eslint-disable-next-line
-          register!.products = register!.products.filter((image: Image) => {
-            return image.key !== payload.key;
-          });
-          // eslint-disable-next-line
-          register!.points = register!.points - state.points_per_sell;
-        } else {
-          // add image
-          const image: Image = {
-            key: payload.key,
-            url: payload.url,
-            title: payload.title,
-          };
-          products?.push(image);
-          // eslint-disable-next-line
-          register!.points = register!.points + state.points_per_sell;
+      const existImage: boolean | undefined = register?.products.some(
+        (image: Image) => {
+          return image.key === payload.key;
         }
+      );
+
+      if (existImage) {
+        // eslint-disable-next-line
+        register!.products = register!.products.filter((image: Image) => {
+          return image.key !== payload.key;
+        });
+        // eslint-disable-next-line
+        register!.points = register!.points - points_per_sell;
       } else {
-        // create a seller
         const image: Image = {
           key: payload.key,
           url: payload.url,
           title: payload.title,
         };
-        const newSeller: SellRegister = {
-          id: 0,
-          name: "",
-          points: 0,
-          products: [],
-        };
-        newSeller.id = payload.id;
-        newSeller.name = payload.name;
-        newSeller.points = state.points_per_sell;
-        newSeller.products.push(image);
-        state.sellRegisters.push(newSeller);
+        products?.push(image);
+        // eslint-disable-next-line
+        register!.points = register!.points + points_per_sell;
       }
-      console.log("All Movements -> ", state.sellRegisters);
+
+      console.log("Complete Rating : => ", state.sellRegisters);
     },
   },
   actions: {
@@ -133,6 +121,16 @@ export default createStore({
     async getAlegraSellers({ commit }) {
       const alegraSellers = await getSellersAlegra();
       commit("GET_ALEGRA_SELLERS", alegraSellers);
+    },
+
+    async fillProducts({ state }) {
+      state.sellers.sort(function (a, b) {
+        return a.id - b.id;
+      });
+      for (let index = 0; index < state.sellers.length; index++) {
+        const response = await createProduct(state.sellers[index]);
+        console.log("res => ", response);
+      }
     },
   },
   modules: {},

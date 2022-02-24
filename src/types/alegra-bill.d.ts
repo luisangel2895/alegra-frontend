@@ -1,14 +1,18 @@
 export interface AlegraBill {
-  date: Date;
-  dueDate: Date;
+  date: String;
+  dueDate: String;
   client: number;
-  seller: number;
+  operationType: string;
+  seller: SellerBill;
   items: Item[];
 }
 
 export interface Item {
   id: number;
-  description: string;
   price: number;
   quantity: number;
+}
+
+export interface SellerBill {
+  id: String;
 }

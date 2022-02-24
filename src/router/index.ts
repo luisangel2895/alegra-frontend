@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
-import Photographers from "../views/Photographers.vue";
+import Home from "@/views/Home.vue";
+import Photographers from "@/views/Photographers.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/photographers",
     name: "Photographers",
     component: Photographers,
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "404",
+    component: NotFound,
   },
 ];
 

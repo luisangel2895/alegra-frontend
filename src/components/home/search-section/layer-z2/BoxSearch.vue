@@ -6,6 +6,7 @@
       placeholder="Search Photo ..."
       v-model="word"
       @keypress="enterSearch"
+      required
     />
     <div class="search--box__icon" @click="searchWord">
       <img src="@/assets/icons/search.svg" alt="" />
