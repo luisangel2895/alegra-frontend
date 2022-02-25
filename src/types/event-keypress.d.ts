@@ -4,6 +4,6 @@ export interface EventKeyPress {
   bubbles: boolean;
   cancelBubble: boolean;
   cancelable: boolean;
-  charCode: Number;
-  code: String;
+  charCode: number;
+  code: string;
 }

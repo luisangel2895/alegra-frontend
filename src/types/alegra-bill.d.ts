@@ -1,6 +1,6 @@
 export interface AlegraBill {
-  date: String;
-  dueDate: String;
+  date: string;
+  dueDate: string;
   client: number;
   operationType: string;
   seller: SellerBill;
@@ -14,5 +14,5 @@ export interface Item {
 }
 
 export interface SellerBill {
-  id: String;
+  id: string;
 }
