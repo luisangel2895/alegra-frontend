@@ -16,7 +16,7 @@ const vuexLocal = new VuexPersistence({
 });
 
 // GLobal Const
-const points_per_sell = 7;
+const points_per_sell = 3;
 const points_objective = 20;
 
 export default createStore({

@@ -4,7 +4,7 @@ import { GoogleImages } from "@/types/google-images";
 
 // Google API = "https://serpapi.com/search.json";
 
-export const urlProxyGoogle = "http://localhost:8000/api_google";
+export const urlProxyGoogle = "/api_google";
 export const defaultWord = "apple";
 
 export const getGoogleImages = async (
