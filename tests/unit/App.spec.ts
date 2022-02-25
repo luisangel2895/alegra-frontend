@@ -62,6 +62,15 @@ const store = createStore({
 });
 
 describe("App.vue", () => {
+  it("Match with snapshot", () => {
+    const wrapper = shallowMount(App, {
+      global: {
+        plugins: [store],
+        stubs: ["router-link", "router-view"],
+      },
+    });
+    expect(wrapper.html()).toMatchSnapshot();
+  });
   it("HeaderComponent and FooterComponent are mounted in App", () => {
     const wrapper = shallowMount(App, {
       global: {

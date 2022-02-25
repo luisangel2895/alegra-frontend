@@ -3,6 +3,8 @@ import { getSellersAlegra } from "@/services/alegra-service";
 import { postBillAlegra } from "@/services/alegra-service";
 // Types
 import { AlegraSeller } from "@/types/alegra-seller";
+import { AlegraBill } from "../../../src/types/alegra-bill";
+import { AlegraResponseBill } from "../../../src/types/alegra-responses";
 
 describe("Alegra Service", (): void => {
   it("Testing general variables to connect to Alegra API", () => {
@@ -25,7 +27,23 @@ describe("Alegra Service", (): void => {
   });
 
   it("Testing Alegra API => POST/invoice", async (): Promise<void> => {
-    // const invoiceCreated = await postBillAlegra();
-    console.log("post test");
+    const billTest: AlegraBill = {
+      date: "2015-11-15",
+      dueDate: "2015-12-15",
+      client: 2,
+      operationType: "INTERNAL_SALE",
+      items: [
+        {
+          id: 1,
+          price: 120,
+          quantity: 5,
+        },
+      ],
+      seller: {
+        id: "9",
+      },
+    };
+    const billCreated: AlegraResponseBill = await postBillAlegra(billTest);
+    expect(billCreated).toBeTruthy();
   });
 });
